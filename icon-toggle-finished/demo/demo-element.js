@@ -1,37 +1,56 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/iron-icons/iron-icons.js';
-import '../icon-toggle.js';
+// Importan la biblioteca Polymer
+//Y un elemento llamado iron-icon
 
-class DemoElement extends PolymerElement {
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import '@polymer/iron-icon/iron-icon.js';
+
+class IconToggle extends PolymerElement {
   static get template() {
     return html`
-      <style>
-        :host {
-          font-family: sans-serif;
-          --icon-toggle-color: lightgrey;
-          --icon-toggle-outline-color: black;
-          --icon-toggle-pressed-color: red;
-        }
-      </style>
-  
-      <h3>Statically-configured icon-toggles</h3>
-      <icon-toggle toggle-icon="star"></icon-toggle>
-      <icon-toggle toggle-icon="star" pressed></icon-toggle>
-    
-      <h3>Data-bound icon-toggle</h3>
-      <!-- use a computed binding to generate the message -->
-      <div><span>[[_message(isFav)]]</span></div>
-      <!-- curly brackets ({{}}} allow two-way binding --> 
-      <icon-toggle toggle-icon="favorite" pressed="{{isFav}}"></icon-toggle>
-    `;
-  }
-  _message(fav) {
-    if (fav) {
-      return 'You really like me!';
-    } 
-    else {
-      return 'Do you like me?';
+    <style>
+    :host {
+      display: inline-block;
+      font-family: sans-serif;
+    --icon-toggle-color: lightgrey;
+    --icon-toggle-outline-color: black;
+    --icon-toggle-pressed-color: purple;
     }
+    iron-icon {
+      fill: var(--icon-toggle-color, rgba(0,0,0,0));
+    stroke: var(--icon-toggle-outline-color, currentcolor);
+    }
+    :host([pressed]) iron-icon {
+      fill: var(--icon-toggle-pressed-color, currentcolor);
+    }
+  </style>
+  
+      <!-- shadow DOM goes here -->
+      <iron-icon icon="[[toggleIcon]]"></iron-icon>
+    `;
+    //Not much here en el navegador
   }
+  static get properties () {
+    return {
+      toggleIcon: {
+        type: String
+      },
+      pressed: {
+        type: Boolean,
+        value: false,
+        notify: true,
+        reflectToAttribute: true
+      }
+      
+    };
+  }
+  constructor() {
+    super();
+    this.addEventListener('click', this.toggle.bind(this));
+  }
+  toggle() {
+    this.pressed = !this.pressed;
+  }
+  
 }
-customElements.define('demo-element', DemoElement);
+
+customElements.define('icon-toggle', IconToggle);
